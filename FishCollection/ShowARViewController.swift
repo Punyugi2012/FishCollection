@@ -41,15 +41,15 @@ class ShowARViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         fishNode?.removeFromParentNode()
+        fishNode = nil
+        currentAngleY  = -1.57
         let configuration = ARWorldTrackingConfiguration()
         configuration.isLightEstimationEnabled = true
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        view.isUserInteractionEnabled = false
         loader.startAnimating()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            if let fishNode = self.fishNode {
-                self.sceneView.scene.rootNode.addChildNode(fishNode)
-            }
+        view.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.loadFishNode()
             self.loader.stopAnimating()
             self.view.isUserInteractionEnabled = true
         }
@@ -101,7 +101,7 @@ class ShowARViewController: UIViewController {
                 }
                 childFish?.geometry?.materials = [material]
                 childFish?.scale = SCNVector3(0.03, 0.03, 0.03)
-                childFish?.position = SCNVector3(0, 0, -0.1)
+                childFish?.position = SCNVector3(0, 0, -0.3)
                 childFish?.eulerAngles = SCNVector3(0, 0, 0)
                 childFish?.eulerAngles.y = Float(-90) * Float(Double.pi / 180)
                 if let childFish = childFish {
@@ -151,17 +151,18 @@ class ShowARViewController: UIViewController {
     }
     
     @objc func handlePinch(gesture: UIPinchGestureRecognizer) {
-        guard let fishNode = fishNode else { return }
+        guard let node = fishNode, let fishNode = node.childNode(withName: "Fish", recursively: true) else { return }
+        print(gesture.scale)
         switch gesture.state {
         case .began:
             gesture.scale = CGFloat(fishNode.scale.x)
         case .changed:
             var newScale = SCNVector3(0, 0, 0)
-            if gesture.scale < 0.2 {
-                newScale = SCNVector3(0.2, 0.2, 0.2)
+            if gesture.scale < 0.01 {
+                newScale = SCNVector3(0.01, 0.01, 0.01)
             }
-            else if gesture.scale > 5 {
-                newScale = SCNVector3(5, 5, 5)
+            else if gesture.scale > 0.3 {
+                newScale = SCNVector3(0.3, 0.3, 0.3)
             }
             else {
                 newScale = SCNVector3(gesture.scale, gesture.scale, gesture.scale)
@@ -169,11 +170,11 @@ class ShowARViewController: UIViewController {
             fishNode.scale = newScale
         case .ended:
             var newScale = SCNVector3(0, 0, 0)
-            if gesture.scale < 0.2 {
-                newScale = SCNVector3(0.2, 0.2, 0.2)
+            if gesture.scale < 0.01 {
+                newScale = SCNVector3(0.01, 0.01, 0.01)
             }
-            else if gesture.scale > 5 {
-                newScale = SCNVector3(5, 5, 5)
+            else if gesture.scale > 0.3 {
+                newScale = SCNVector3(0.3, 0.3, 0.3)
             }
             else {
                 newScale = SCNVector3(gesture.scale, gesture.scale, gesture.scale)
