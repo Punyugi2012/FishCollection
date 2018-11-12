@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="landscape">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LoadDataView" customModule="FishCollection" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ntw-v0-feq">
+                    <rect key="frame" x="183.5" y="186.5" width="300" height="2"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="300" id="jtl-fD-SWu"/>
+                    </constraints>
+                </progressView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading Data..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Dm-aa-RpY">
+                    <rect key="frame" x="16" y="137" width="635" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="2ec-mJ-Tod"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="ntw-v0-feq" firstAttribute="top" secondItem="1Dm-aa-RpY" secondAttribute="bottom" constant="29.5" id="86M-1T-s69"/>
+                <constraint firstItem="ntw-v0-feq" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Bfx-VZ-i4J"/>
+                <constraint firstItem="ntw-v0-feq" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="G2w-6q-y32"/>
+                <constraint firstAttribute="trailing" secondItem="1Dm-aa-RpY" secondAttribute="trailing" constant="16" id="Sg6-u3-lAf"/>
+                <constraint firstItem="1Dm-aa-RpY" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="uAP-cc-JAW"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="Zq9-ML-9BX"/>
+            <connections>
+                <outlet property="progressView" destination="ntw-v0-feq" id="uWv-KG-iF3"/>
+            </connections>
+            <point key="canvasLocation" x="130.40000000000001" y="152.47376311844079"/>
+        </view>
+    </objects>
+</document>
