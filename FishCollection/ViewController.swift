@@ -148,7 +148,6 @@ class ViewController: UIViewController {
         }
     }
     
-    
     func downloadDataFromServer(completeHandler: @escaping (_ result: Bool) -> Void) {
         DispatchQueue.global(qos: .userInteractive).async {
             let dataPath = "https://raw.githubusercontent.com/AmAdevs/dae/master/data1.json"
@@ -302,7 +301,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         } else {
             AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
                 if granted {
-                    self.performSegue(withIdentifier: "ShowARMode", sender: self)
+                    DispatchQueue.main.async {
+                        self.performSegue(withIdentifier: "ShowARMode", sender: self)
+                    }
                 } 
             })
         }
