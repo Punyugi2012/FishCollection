@@ -32,11 +32,27 @@ class ShowARViewController: UIViewController {
     var fishNode: SCNNode?
     var getFishModel: FishModel?
     let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         loader.stopAnimating()
-
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        fishNode?.removeFromParentNode()
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.isLightEstimationEnabled = true
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        view.isUserInteractionEnabled = false
+        loader.startAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            if let fishNode = self.fishNode {
+                self.sceneView.scene.rootNode.addChildNode(fishNode)
+            }
+            self.loader.stopAnimating()
+            self.view.isUserInteractionEnabled = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,7 +69,7 @@ class ShowARViewController: UIViewController {
         
         loader.startAnimating()
         view.isUserInteractionEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             self.loadFishNode()
             self.loader.stopAnimating()
             self.view.isUserInteractionEnabled = true
@@ -112,7 +128,7 @@ class ShowARViewController: UIViewController {
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         loader.startAnimating()
         view.isUserInteractionEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             self.loadFishNode()
             self.loader.stopAnimating()
             self.view.isUserInteractionEnabled = true
