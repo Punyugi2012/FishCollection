@@ -17,17 +17,22 @@ class ShowARViewController: UIViewController {
             loader.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
         }
     }
+    
     @IBOutlet weak var sceneView: ARSCNView!
+    
     @IBOutlet weak var resetBtn: UIButton! {
         didSet {
             resetBtn.layer.cornerRadius = resetBtn.bounds.height / 2.0
         }
     }
+    
     @IBOutlet weak var closeBtn: UIButton! {
         didSet {
             closeBtn.layer.cornerRadius = closeBtn.bounds.height / 2.0
         }
     }
+    
+    @IBOutlet weak var sceneKitView: SCNView!
     
     var fishNode: SCNNode?
     var getFishModel: FishModel?
@@ -36,13 +41,14 @@ class ShowARViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        sceneKitView.isHidden = true
+        sceneKitView.scene = nil
         loader.stopAnimating()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         fishNode?.removeFromParentNode()
         fishNode = nil
-        currentAngleY  = -1.57
         let configuration = ARWorldTrackingConfiguration()
         configuration.isLightEstimationEnabled = true
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
@@ -78,6 +84,7 @@ class ShowARViewController: UIViewController {
     
     
     func loadFishNode() {
+        currentAngleY  = -1.57
         if
             let modelURLString = getFishModel?.modelURL,
             let modelURL = URL(string: modelURLString)
@@ -122,7 +129,6 @@ class ShowARViewController: UIViewController {
     @IBAction func tappedResetBtn(_ sender: UIButton) {
         fishNode?.removeFromParentNode()
         fishNode = nil
-        currentAngleY  = -1.57
         let configuration = ARWorldTrackingConfiguration()
         configuration.isLightEstimationEnabled = true
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
@@ -188,6 +194,24 @@ class ShowARViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
-
+    
+    
+    @IBAction func modeChanged(_ sender: UISwitch) {
+        if !sender.isOn {
+            sceneView.session.pause()
+            fishNode?.removeFromParentNode()
+            fishNode = nil
+            sceneKitView.isHidden = false
+            sceneView.isHidden = true
+            if let scene = SCNScene(named: "SceneKitAssets.scnassets/3DWorldScene.scn") {
+                sceneKitView.scene = scene
+                
+            }
+        }
+        else {
+        
+        }
+    }
+    
 
 }
