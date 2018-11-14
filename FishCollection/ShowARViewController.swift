@@ -60,7 +60,6 @@ class ShowARViewController: UIViewController {
         arView.addGestureRecognizer(pinchGesture)
         let configuration = ARWorldTrackingConfiguration()
         configuration.isLightEstimationEnabled = true
-        arView.scene = SCNScene()
         arView.session.run(configuration, options: [])
         
         loader.startAnimating()
@@ -206,7 +205,7 @@ class ShowARViewController: UIViewController {
     @IBAction func modeChanged(_ sender: UISwitch) {
         if !sender.isOn {
             arView.session.pause()
-            arView.scene.background.contents = UIColor.white
+            arView.scene.background.contents = UIImage(named: "background")
         }
         else {
             arView.scene = SCNScene()
