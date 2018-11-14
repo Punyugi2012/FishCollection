@@ -114,9 +114,6 @@
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gBv-Rw-OZn">
                                 <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
                             </arscnView>
-                            <sceneKitView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ann-HQ-NGE">
-                                <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
-                            </sceneKitView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VET-2l-uNh">
                                 <rect key="frame" x="666" y="10" width="50" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -167,16 +164,12 @@
                             <constraint firstItem="UPR-pw-vLi" firstAttribute="leading" secondItem="csb-Ec-Y5h" secondAttribute="trailing" constant="10" id="70O-ma-XhS"/>
                             <constraint firstItem="gBv-Rw-OZn" firstAttribute="top" secondItem="kuQ-KZ-xAP" secondAttribute="top" id="9XZ-d2-zKv"/>
                             <constraint firstItem="VET-2l-uNh" firstAttribute="top" secondItem="kuQ-KZ-xAP" secondAttribute="top" constant="10" id="E20-3a-UPD"/>
-                            <constraint firstItem="Ann-HQ-NGE" firstAttribute="centerX" secondItem="kuQ-KZ-xAP" secondAttribute="centerX" id="GiF-x0-JJz"/>
-                            <constraint firstItem="Ann-HQ-NGE" firstAttribute="centerY" secondItem="kuQ-KZ-xAP" secondAttribute="centerY" id="IhH-sf-UF1"/>
                             <constraint firstItem="dzy-hJ-6qb" firstAttribute="centerY" secondItem="E6C-9Q-o5k" secondAttribute="centerY" id="J2U-CS-TMz"/>
                             <constraint firstItem="csb-Ec-Y5h" firstAttribute="leading" secondItem="kuQ-KZ-xAP" secondAttribute="leading" constant="13" id="L80-oN-nxd"/>
-                            <constraint firstItem="Ann-HQ-NGE" firstAttribute="height" secondItem="E6C-9Q-o5k" secondAttribute="height" id="PL0-g7-9DJ"/>
                             <constraint firstItem="kuQ-KZ-xAP" firstAttribute="trailing" secondItem="VET-2l-uNh" secondAttribute="trailing" constant="20" id="R6a-XR-2sD"/>
                             <constraint firstItem="VET-2l-uNh" firstAttribute="leading" secondItem="HVN-Mx-82L" secondAttribute="trailing" constant="25" id="Rd2-Qi-EMn"/>
                             <constraint firstItem="UPR-pw-vLi" firstAttribute="centerY" secondItem="csb-Ec-Y5h" secondAttribute="centerY" id="Www-To-Wcc"/>
                             <constraint firstItem="gBv-Rw-OZn" firstAttribute="leading" secondItem="kuQ-KZ-xAP" secondAttribute="leading" id="d3H-YV-9yo"/>
-                            <constraint firstItem="Ann-HQ-NGE" firstAttribute="width" secondItem="E6C-9Q-o5k" secondAttribute="width" id="dnc-VL-kJ6"/>
                             <constraint firstItem="kuQ-KZ-xAP" firstAttribute="trailing" secondItem="gBv-Rw-OZn" secondAttribute="trailing" id="eoy-HB-2eF"/>
                             <constraint firstItem="csb-Ec-Y5h" firstAttribute="top" secondItem="kuQ-KZ-xAP" secondAttribute="top" constant="10" id="fbH-es-RLU"/>
                             <constraint firstItem="dzy-hJ-6qb" firstAttribute="centerX" secondItem="E6C-9Q-o5k" secondAttribute="centerX" id="lUB-Dh-uNk"/>
@@ -184,11 +177,11 @@
                         <viewLayoutGuide key="safeArea" id="kuQ-KZ-xAP"/>
                     </view>
                     <connections>
+                        <outlet property="arView" destination="gBv-Rw-OZn" id="z75-Uk-qkQ"/>
                         <outlet property="closeBtn" destination="VET-2l-uNh" id="Lwd-4a-m2k"/>
                         <outlet property="loader" destination="dzy-hJ-6qb" id="Sbl-Uo-SQB"/>
                         <outlet property="resetBtn" destination="HVN-Mx-82L" id="rOZ-iR-nsX"/>
-                        <outlet property="sceneKitView" destination="Ann-HQ-NGE" id="B7y-bg-Z0d"/>
-                        <outlet property="sceneView" destination="gBv-Rw-OZn" id="z75-Uk-qkQ"/>
+                        <outlet property="switchControl" destination="csb-Ec-Y5h" id="Jl6-Fi-eYf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RJQ-1O-uiK" userLabel="First Responder" sceneMemberID="firstResponder"/>

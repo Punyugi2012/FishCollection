@@ -17,8 +17,9 @@ class ShowARViewController: UIViewController {
             loader.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
         }
     }
+    @IBOutlet weak var switchControl: UISwitch!
     
-    @IBOutlet weak var sceneView: ARSCNView!
+    @IBOutlet weak var arView: ARSCNView!
     
     @IBOutlet weak var resetBtn: UIButton! {
         didSet {
@@ -32,7 +33,6 @@ class ShowARViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var sceneKitView: SCNView!
     
     var fishNode: SCNNode?
     var getFishModel: FishModel?
@@ -41,37 +41,25 @@ class ShowARViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        sceneKitView.isHidden = true
-        sceneKitView.scene = nil
         loader.stopAnimating()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        fishNode?.removeFromParentNode()
-        fishNode = nil
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.isLightEstimationEnabled = true
-        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        loader.startAnimating()
-        view.isUserInteractionEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.loadFishNode()
-            self.loader.stopAnimating()
-            self.view.isUserInteractionEnabled = true
-        }
+        resetFishNode()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-        sceneView.addGestureRecognizer(panGesture)
+        arView.addGestureRecognizer(panGesture)
         
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(gesture:)))
         
-        sceneView.addGestureRecognizer(pinchGesture)
+        arView.addGestureRecognizer(pinchGesture)
         let configuration = ARWorldTrackingConfiguration()
         configuration.isLightEstimationEnabled = true
-        sceneView.session.run(configuration, options: [])
+        arView.scene = SCNScene()
+        arView.session.run(configuration, options: [])
         
         loader.startAnimating()
         view.isUserInteractionEnabled = false
@@ -92,46 +80,48 @@ class ShowARViewController: UIViewController {
             let localModelURL = documentURL.appendingPathComponent(modelURL.lastPathComponent)
             do {
                 let scene = try SCNScene(url: localModelURL, options: [:])
-                let fishNode = SCNNode()
-                fishNode.position = SCNVector3(0, 0, 0)
-                let childFish = scene.rootNode.childNode(withName: "Fish", recursively: false)
-                childFish?.geometry?.materials = []
-                let material = SCNMaterial()
-                for texture in getFishModel?.textureURLs ?? [] {
-                    if let textureURL = URL(string: texture) {
-                        let localTextureURL = self.documentURL.appendingPathComponent(textureURL.lastPathComponent)
-                        let data = try? Data(contentsOf: localTextureURL)
-                        if let data = data {
-                            material.diffuse.contents = data
-                        }
-                    }
-                }
-                childFish?.geometry?.materials = [material]
-                childFish?.scale = SCNVector3(0.03, 0.03, 0.03)
-                childFish?.position = SCNVector3(0, 0, -0.3)
-                childFish?.eulerAngles = SCNVector3(0, 0, 0)
-                childFish?.eulerAngles.y = Float(-90) * Float(Double.pi / 180)
-                if let childFish = childFish {
-                    fishNode.addChildNode(childFish)
-                }
+                let fishNode = getFishNode(scene: scene)
                 self.fishNode = fishNode
-                sceneView.scene.rootNode.addChildNode(fishNode)
+                arView.scene.rootNode.addChildNode(fishNode)
             }catch {
                 print(error.localizedDescription)
             }
         }
     }
     
-    @IBAction func tappedCloseBtn(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: nil)
+    func getFishNode(scene: SCNScene) -> SCNNode {
+        let fishNode = SCNNode()
+        fishNode.position = SCNVector3(0, 0, 0)
+        let childFish = scene.rootNode.childNode(withName: "Fish", recursively: false)
+        childFish?.geometry?.materials = []
+        let material = SCNMaterial()
+        for texture in getFishModel?.textureURLs ?? [] {
+            if let textureURL = URL(string: texture) {
+                let localTextureURL = self.documentURL.appendingPathComponent(textureURL.lastPathComponent)
+                let data = try? Data(contentsOf: localTextureURL)
+                if let data = data {
+                    material.diffuse.contents = data
+                }
+            }
+        }
+        childFish?.geometry?.materials = [material]
+        childFish?.scale = SCNVector3(0.03, 0.03, 0.03)
+        childFish?.position = SCNVector3(0, 0, -0.3)
+        childFish?.eulerAngles = SCNVector3(0, 0, 0)
+        childFish?.eulerAngles.y = Float(-90) * Float(Double.pi / 180)
+        if let childFish = childFish {
+            fishNode.addChildNode(childFish)
+        }
+        return fishNode
     }
     
-    @IBAction func tappedResetBtn(_ sender: UIButton) {
+    func resetFishNode() {
         fishNode?.removeFromParentNode()
         fishNode = nil
         let configuration = ARWorldTrackingConfiguration()
         configuration.isLightEstimationEnabled = true
-        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        arView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        arView.scene = SCNScene()
         loader.startAnimating()
         view.isUserInteractionEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -141,12 +131,20 @@ class ShowARViewController: UIViewController {
         }
     }
     
+    @IBAction func tappedCloseBtn(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func tappedResetBtn(_ sender: UIButton) {
+        resetFishNode()
+    }
+    
     var currentAngleY: Float = -1.57
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
         if let node = fishNode, let fishNode = node.childNode(withName: "Fish", recursively: true) {
             var newAngleY: Float = 0.0
-            let translation = gesture.translation(in: sceneView)
+            let translation = gesture.translation(in: arView)
             newAngleY = Float(translation.x) * Float(Double.pi / 180)
             newAngleY += currentAngleY
             fishNode.eulerAngles.y = newAngleY
@@ -158,7 +156,6 @@ class ShowARViewController: UIViewController {
     
     @objc func handlePinch(gesture: UIPinchGestureRecognizer) {
         guard let node = fishNode, let fishNode = node.childNode(withName: "Fish", recursively: true) else { return }
-        print(gesture.scale)
         switch gesture.state {
         case .began:
             gesture.scale = CGFloat(fishNode.scale.x)
@@ -195,23 +192,20 @@ class ShowARViewController: UIViewController {
         return true
     }
     
-    
     @IBAction func modeChanged(_ sender: UISwitch) {
         if !sender.isOn {
-            sceneView.session.pause()
-            fishNode?.removeFromParentNode()
-            fishNode = nil
-            sceneKitView.isHidden = false
-            sceneView.isHidden = true
-            if let scene = SCNScene(named: "SceneKitAssets.scnassets/3DWorldScene.scn") {
-                sceneKitView.scene = scene
-                
+            if let childFish = fishNode?.childNode(withName: "Fish", recursively: false) {
+                arView.session.pause()
+                arView.scene.background.contents = UIColor.white
+                childFish.scale = SCNVector3(0.03, 0.03, 0.03)
+                childFish.position = SCNVector3(0, 0, -0.3)
+                childFish.eulerAngles = SCNVector3(0, 0, 0)
+                childFish.eulerAngles.y = Float(-90) * Float(Double.pi / 180)
             }
         }
         else {
-        
+            resetFishNode()
         }
     }
     
-
 }

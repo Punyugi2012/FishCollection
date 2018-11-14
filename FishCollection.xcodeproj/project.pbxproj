@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B83489B42191797400F4EC18 /* ShowARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83489B32191797400F4EC18 /* ShowARViewController.swift */; };
-		B83651B5219B2ADB004B7728 /* SceneKitAssets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = B83651B4219B2ADB004B7728 /* SceneKitAssets.scnassets */; };
 		B83D3590218DDB1400318918 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83D358F218DDB1400318918 /* AppDelegate.swift */; };
 		B83D3592218DDB1400318918 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83D3591218DDB1400318918 /* ViewController.swift */; };
 		B83D3595218DDB1400318918 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B83D3593218DDB1400318918 /* Main.storyboard */; };
@@ -21,7 +20,6 @@
 
 /* Begin PBXFileReference section */
 		B83489B32191797400F4EC18 /* ShowARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowARViewController.swift; sourceTree = "<group>"; };
-		B83651B4219B2ADB004B7728 /* SceneKitAssets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = SceneKitAssets.scnassets; sourceTree = "<group>"; };
 		B83D358C218DDB1400318918 /* FishCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FishCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83D358F218DDB1400318918 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B83D3591218DDB1400318918 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -74,7 +72,6 @@
 				B83D35A3218DE4BA00318918 /* LoadDataView.xib */,
 				B83D35A5218DE55A00318918 /* LoadDataView.swift */,
 				B83489B32191797400F4EC18 /* ShowARViewController.swift */,
-				B83651B4219B2ADB004B7728 /* SceneKitAssets.scnassets */,
 			);
 			path = FishCollection;
 			sourceTree = "<group>";
@@ -140,7 +137,6 @@
 				B83D359A218DDB1600318918 /* LaunchScreen.storyboard in Resources */,
 				B83D3597218DDB1600318918 /* Assets.xcassets in Resources */,
 				B83D35A4218DE4BA00318918 /* LoadDataView.xib in Resources */,
-				B83651B5219B2ADB004B7728 /* SceneKitAssets.scnassets in Resources */,
 				B83D3595218DDB1400318918 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
