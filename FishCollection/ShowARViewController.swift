@@ -45,7 +45,9 @@ class ShowARViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        resetFishNode()
+        if switchControl.isOn {
+            resetFishNode()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -121,7 +123,6 @@ class ShowARViewController: UIViewController {
         let configuration = ARWorldTrackingConfiguration()
         configuration.isLightEstimationEnabled = true
         arView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        arView.scene = SCNScene()
         loader.startAnimating()
         view.isUserInteractionEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -136,7 +137,17 @@ class ShowARViewController: UIViewController {
     }
     
     @IBAction func tappedResetBtn(_ sender: UIButton) {
-        resetFishNode()
+        if !switchControl.isOn {
+            if let childFish = fishNode?.childNode(withName: "Fish", recursively: false) {
+                childFish.scale = SCNVector3(0.03, 0.03, 0.03)
+                childFish.position = SCNVector3(0, 0, -0.3)
+                childFish.eulerAngles = SCNVector3(0, 0, 0)
+                childFish.eulerAngles.y = Float(-90) * Float(Double.pi / 180)
+            }
+        }
+        else {
+            resetFishNode()
+        }
     }
     
     var currentAngleY: Float = -1.57
@@ -194,16 +205,11 @@ class ShowARViewController: UIViewController {
     
     @IBAction func modeChanged(_ sender: UISwitch) {
         if !sender.isOn {
-            if let childFish = fishNode?.childNode(withName: "Fish", recursively: false) {
-                arView.session.pause()
-                arView.scene.background.contents = UIColor.white
-                childFish.scale = SCNVector3(0.03, 0.03, 0.03)
-                childFish.position = SCNVector3(0, 0, -0.3)
-                childFish.eulerAngles = SCNVector3(0, 0, 0)
-                childFish.eulerAngles.y = Float(-90) * Float(Double.pi / 180)
-            }
+            arView.session.pause()
+            arView.scene.background.contents = UIColor.white
         }
         else {
+            arView.scene = SCNScene()
             resetFishNode()
         }
     }
