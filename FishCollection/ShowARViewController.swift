@@ -54,6 +54,12 @@ class ShowARViewController: UIViewController {
                 let rotation = SCNMatrix4MakeRotation(Float(180) * Float(Double.pi / 180), 0, 0, 1)
                 fishNode.simdTransform = simd_mul(fishNode.simdTransform, matrix_float4x4(rotation))
             }
+//            if getStatusBarOrientation() == .landscapeLeft {
+//                if let fishNode = fishNode {
+//                    let rotation = SCNMatrix4MakeRotation(Float(180) * Float(Double.pi / 180), 0, 0, 1)
+//                    fishNode.simdTransform = simd_mul(fishNode.simdTransform, matrix_float4x4(rotation))
+//                }
+//            }
         }
     }
     
@@ -227,14 +233,33 @@ class ShowARViewController: UIViewController {
                     identity.columns.3.z = -0.1
                     let newTransform = simd_mul(cameraTransform, identity)
                     fishNode.simdTransform = newTransform
-                    let rotation = SCNMatrix4MakeRotation(Float(180) * Float(Double.pi / 180), 0, 0, 1)
-                    fishNode.simdTransform = simd_mul(fishNode.simdTransform, matrix_float4x4(rotation))
+                    if getStatusBarOrientation() == .landscapeLeft {
+                        print("Right")
+                        let rotation = SCNMatrix4MakeRotation(Float(180) * Float(Double.pi / 180), 0, 0, 1)
+                        fishNode.simdTransform = simd_mul(fishNode.simdTransform, matrix_float4x4(rotation))
+                    }
                 }
             }
         }
         else {
             arView.scene = SCNScene()
             replaceFishNode()
+        }
+    }
+    
+    func getStatusBarOrientation() -> AVCaptureVideoOrientation {
+        let app = UIApplication.shared
+        switch app.statusBarOrientation {
+        case .portrait:
+            return .portrait
+        case .portraitUpsideDown:
+            return .portraitUpsideDown;
+        case .landscapeLeft:
+            return .landscapeLeft
+        case .landscapeRight:
+            return .landscapeRight
+        default:
+            return .landscapeRight
         }
     }
     
