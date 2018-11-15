@@ -42,6 +42,7 @@ class ShowARViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loader.stopAnimating()
+        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
