@@ -46,7 +46,13 @@ class ShowARViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         if switchControl.isOn {
-            resetFishNode()
+            replaceFishNode()
+        }
+        else {
+            if let fishNode = fishNode {
+                let rotation = SCNMatrix4MakeRotation(Float(180) * Float(Double.pi / 180), 0, 0, 1)
+                fishNode.simdTransform = simd_mul(fishNode.simdTransform, matrix_float4x4(rotation))
+            }
         }
     }
     
@@ -65,14 +71,14 @@ class ShowARViewController: UIViewController {
         loader.startAnimating()
         view.isUserInteractionEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.loadFishNode()
+            self.placeFishNodeToARView()
             self.loader.stopAnimating()
             self.view.isUserInteractionEnabled = true
         }
     }
     
     
-    func loadFishNode() {
+    func placeFishNodeToARView() {
         currentAngleY  = -1.57
         if
             let modelURLString = getFishModel?.modelURL,
@@ -81,7 +87,7 @@ class ShowARViewController: UIViewController {
             let localModelURL = documentURL.appendingPathComponent(modelURL.lastPathComponent)
             do {
                 let scene = try SCNScene(url: localModelURL, options: [:])
-                let fishNode = getFishNode(scene: scene)
+                let fishNode = getFishNodeFromScene(scene: scene)
                 self.fishNode = fishNode
                 arView.scene.rootNode.addChildNode(fishNode)
             }catch {
@@ -90,7 +96,7 @@ class ShowARViewController: UIViewController {
         }
     }
     
-    func getFishNode(scene: SCNScene) -> SCNNode {
+    func getFishNodeFromScene(scene: SCNScene) -> SCNNode {
         let fishNode = SCNNode()
         fishNode.position = SCNVector3(0, 0, 0)
         let childFish = scene.rootNode.childNode(withName: "Fish", recursively: false)
@@ -116,7 +122,7 @@ class ShowARViewController: UIViewController {
         return fishNode
     }
     
-    func resetFishNode() {
+    func replaceFishNode() {
         fishNode?.removeFromParentNode()
         fishNode = nil
         let configuration = ARWorldTrackingConfiguration()
@@ -125,7 +131,7 @@ class ShowARViewController: UIViewController {
         loader.startAnimating()
         view.isUserInteractionEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.loadFishNode()
+            self.placeFishNodeToARView()
             self.loader.stopAnimating()
             self.view.isUserInteractionEnabled = true
         }
@@ -145,7 +151,7 @@ class ShowARViewController: UIViewController {
             }
         }
         else {
-            resetFishNode()
+            replaceFishNode()
         }
     }
     
@@ -206,11 +212,30 @@ class ShowARViewController: UIViewController {
         if !sender.isOn {
             arView.session.pause()
             arView.scene.background.contents = UIImage(named: "background")
+            if let fishNode = fishNode, let childFish = fishNode.childNode(withName: "Fish", recursively: false) {
+                childFish.scale = SCNVector3(0.03, 0.03, 0.03)
+                childFish.eulerAngles = SCNVector3(0, 0, 0)
+                childFish.eulerAngles.y = Float(-90) * Float(Double.pi / 180)
+                childFish.position = SCNVector3(0, 0, -0.3)
+                if let currentFrame = arView.session.currentFrame {
+                    let camera = currentFrame.camera
+                    let cameraTransform = camera.transform
+                    var identity = matrix_identity_float4x4
+                    identity.columns.3.x = 0
+                    identity.columns.3.y = 0
+                    identity.columns.3.z = -0.1
+                    let newTransform = simd_mul(cameraTransform, identity)
+                    fishNode.simdTransform = newTransform
+                    let rotation = SCNMatrix4MakeRotation(Float(180) * Float(Double.pi / 180), 0, 0, 1)
+                    fishNode.simdTransform = simd_mul(fishNode.simdTransform, matrix_float4x4(rotation))
+                }
+            }
         }
         else {
             arView.scene = SCNScene()
-            resetFishNode()
+            replaceFishNode()
         }
     }
     
 }
+
